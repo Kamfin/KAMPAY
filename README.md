@@ -1,329 +1,414 @@
-# SFlow
+# Stow
+**Decentralized Savings Platform on Stellar**
 
-## Introduction
+Stow is a decentralized savings protocol built on **Stellar using Soroban smart contracts**. It enables individuals and communities to save transparently using stablecoins, with flexible, locked, goal-based, group, and group-split savings mechanisms enforced fully on-chain.
 
-SFlow is an AI-first autonomous payroll, shareholder, and financial infrastructure protocol built on [Stellar](https://stellar.org?utm_source=chatgpt.com) — transforming payroll into programmable economic ownership.
-
-SFlow enables businesses to raise capital by listing shares on-chain, process global payroll in seconds, distribute automated shareholder dividends, and unlock asset-backed financial services — all within a single decentralized ecosystem powered by Soroban smart contracts on [Stellar](https://stellar.org?utm_source=chatgpt.com).
-
-Businesses, startups, DAOs, agencies, and organizations can tokenize ownership through SFlow and allow investors, workers, and communities to participate directly in their growth. Shareholders hold tokenized shares in their Stellar wallets and track real-time operational activity transparently on-chain — including payroll volume, treasury balances, revenue generation, dividend distributions, and protocol activity.
-
-Every payroll transaction processed through SFlow contributes to a protocol treasury that redistributes value back to shareholders automatically every month. Instead of banks and payroll processors extracting the value through fees and delays, SFlow routes that value back to the ecosystem participants powering the network.
-
-Built on [Stellar](https://stellar.org?utm_source=chatgpt.com), SFlow leverages:
-
-* 3–5 second settlement finality
-* Native USDC support
-* Soroban smart contracts
-* Ultra-low transaction fees
-* Built-in decentralized exchange functionality
-* Global payment infrastructure optimized for scale
-
-Every share issuance, payroll stream, treasury operation, BNPL repayment, and dividend distribution settles natively on Stellar in seconds.
+The project solves the problem of opaque, centralized savings platforms in emerging markets by providing a non-custodial, transparent alternative where users maintain full control of their funds and save in a dollar-denominated stablecoin (USDC) as a hedge against local-currency depreciation. Stow is designed for developers, contributors, and financial communities interested in building open, composable savings infrastructure using low-fee, fast-finality blockchain primitives.
 
 ---
 
-# Vision
+##  Core Features
 
-SFlow aims to become the financial operating system for modern businesses — combining payroll, treasury automation, ownership, lending, and commerce into one intelligent on-chain infrastructure layer.
+- Non-custodial savings via Soroban smart contracts — funds move only under contract rules you can read
+- Flexible savings — deposit and withdraw any time
+- Locked savings with deterministic, on-chain withdrawal rules
+- Goal-based savings with automated milestones
+- Group savings pools with shared rules and payouts enforced by the contract, not an organizer
+- Group split savings — a group saves into a shared pool and the balance is split back among members by their agreed shares, calculated and settled on-chain
+- Dollar-denominated by default — save in USDC, cash in and out in local currency via Stellar anchors
+- Passwordless onboarding with passkey smart wallets and sponsored fees
+- Web interface for seamless contract interaction
+- Detailed savings product reference: `SAVINGS_PRODUCT_REFERENCE.md`
 
-The platform transforms:
-
-* payroll into yield-generating infrastructure
-* business ownership into liquid programmable assets
-* salaries into real-time financial streams
-* treasury management into autonomous AI execution
-* consumer financing into collateralized on-chain credit
-
----
-
-# The Problem
-
-The global payroll industry processes over **$8 trillion annually**, yet businesses and workers lose billions every year to inefficient intermediaries.
-
-Traditional payroll systems suffer from:
-
-* 3–8% processing fees
-* multi-day settlement delays
-* fragmented banking systems
-* opaque reporting
-* expensive international transfers
-* inaccessible financing for workers and businesses
-* zero ownership participation for users
-
-Meanwhile, crypto holders often face another problem:
-
-* they must sell appreciating assets to access liquidity or purchase goods
-
-SFlow solves both.
 
 ---
 
-# The SFlow Solution
+## 🔑 Onboarding & On/Off-Ramps
 
-SFlow combines:
+Stow is built so mainstream users never have to touch crypto mechanics:
 
-* AI treasury management
-* on-chain payroll
-* shareholder participation
-* collateralized Buy Now Pay Later financing
-* programmable compliance
-* real-time dividend distribution
-
-All powered by Soroban smart contracts on [Stellar](https://stellar.org?utm_source=chatgpt.com).
+- **Passkey smart wallets** — accounts are Soroban smart contracts signed with device biometrics (WebAuthn / secp256r1). No seed phrases. Integrate with `passkey-kit` or an OpenZeppelin smart-account SDK.
+- **Sponsored (gasless) fees** — a relayer pays transaction fees so users don't need XLM to make their first deposit.
+- **Social recovery (optional)** — recovery signers so a lost device doesn't mean lost savings (disclosed as a trust trade-off).
+- **Local-currency ramps** — via the SDF Anchor Platform using SEP-24 / SEP-6 for hosted deposit and withdrawal, and SEP-38 for quoted local-currency ↔ USDC conversion. Anchors also handle KYC at the fiat boundary, keeping the protocol layer permissionless.
 
 ---
 
-# Core Features
+## 🏗 Architecture Overview
 
-## Streaming Payroll
+- **Frontend (`apps/web`)**  
+  Next.js application for interacting with Stow smart contracts. Provides a user interface for creating savings accounts, depositing funds, tracking progress, and onboarding via passkey smart wallets.
 
-Workers are paid continuously in real time through Soroban smart contracts.
+- **Backend (`apps/api`)**  
+  Node.js API for off-chain services such as indexing contract events, sending notifications, managing user metadata, aggregating analytics, and orchestrating anchor on/off-ramps.
 
-Instead of waiting weeks for salaries:
+- **Smart Contracts (`contracts/`)**  
+  Soroban smart contracts written in Rust that manage all savings logic, fund custody, group rounds, and withdrawal rules. Yield integration lives behind a swappable adapter so the custody core can be audited independently.
 
-* earnings stream every second
-* workers can withdraw anytime
-* global payouts settle in seconds
-* payroll operates 24/7
-
-Benefits:
-
-* instant liquidity
-* reduced payroll overhead
-* borderless workforce payments
-* transparent salary accounting
-
----
-
-## Business Share Listings
-
-Organizations can tokenize ownership directly on SFlow.
-
-Businesses can:
-
-* list shares publicly or privately
-* raise capital globally
-* distribute automated dividends
-* provide transparent operational metrics
-* enable community ownership
-
-Investors can:
-
-* buy shares instantly
-* monitor company activity on-chain
-* receive automated payouts
-* participate in governance
-* trade ownership transparently
-
----
-
-## AI Treasury Agent
-
-The SFlow AI Treasury Agent autonomously manages protocol and business finances.
-
-Capabilities include:
-
-* payroll scheduling
-* vault monitoring
-* liquidity balancing
-* FX hedging
-* anomaly detection
-* automated treasury replenishment
-* risk monitoring
-* spending analysis
-* repayment tracking
-
-Built with:
-
-* Python
-* LangChain
-* FastAPI
-* Claude
-* Stellar SDK infrastructure
-
----
-
-# SFlow Marketplace — Buy Now Pay Later (BNPL)
-
-SFlow introduces an asset-backed BNPL infrastructure for crypto-native users.
-
-Users often hold valuable crypto or shareholder assets but do not want to sell long-term positions to purchase products or services.
-
-SFlow allows users to:
-
-* lock shares or crypto assets as collateral
-* purchase goods instantly
-* repay monthly over time
-* maintain ownership exposure while accessing liquidity
-
-### How It Works
-
-1. User stakes approved assets
-2. AI evaluates collateral health and repayment capacity
-3. Merchant receives instant settlement in USDC
-4. User repays over scheduled monthly installments
-5. Smart contracts manage repayment automatically
-6. If repayment fails, collateral is liquidated on-chain
-
-### Benefits
-
-* no traditional credit checks
-* no asset liquidation required
-* instant merchant settlement
-* programmable financing
-* transparent on-chain enforcement
-* decentralized consumer credit infrastructure
-
----
-
-# Protocol Revenue Model
-
-Every payroll transaction generates a **0.25% protocol fee**.
-
-Revenue distribution:
-
-* 70% → shareholder dividends
-* 20% → operations
-* 10% → protocol reserve and development
-
-All distributions occur automatically on-chain.
-
----
-
-# SFLOW Shareholder Model
-
-| Tier          | SFLOW  | Price (USDC) | Dividend Estimate* | Governance |
-| ------------- | ------ | ------------ | ------------------ | ---------- |
-| Contributor   | 100    | $50          | ~$3–8/yr           | 1x         |
-| Builder       | 500    | $225         | ~$15–40/yr         | 1x         |
-| Operator      | 2,000  | $800         | ~$60–160/yr        | 1.5x       |
-| Architect     | 10,000 | $3,500       | ~$300–800/yr       | 2x         |
-| Institutional | Custom | Custom       | Negotiated         | 3x         |
-
-*Based on protocol volume. Not guaranteed.
-
----
-
-# Compliance Infrastructure
-
-SFlow integrates programmable compliance directly into the contract layer.
-
-Features:
-
-* jurisdiction-aware withholding
-* KYC/AML enforcement
-* audit logging
-* payroll reporting
-* treasury transparency
-* transaction monitoring
-* risk scoring
-
-This enables global payroll operations while maintaining regulatory adaptability.
-
----
-
-# Why Stellar
-
-[Stellar](https://stellar.org?utm_source=chatgpt.com) is purpose-built for global payments and financial infrastructure.
-
-SFlow leverages Stellar because of:
-
-* near-instant settlement
-* extremely low fees
-* native USDC integration
-* scalable payment rails
-* Soroban smart contracts
-* built-in decentralized exchange
-* energy efficiency
-* cross-border optimization
-
-SFlow could not operate efficiently on traditional banking rails or high-fee blockchains.
-
----
-
-# Technology Stack
-
-| Layer           | Technology                            |
-| --------------- | ------------------------------------- |
-| Blockchain      | Stellar Mainnet + Testnet             |
-| Smart Contracts | Soroban (Rust/WASM)                   |
-| Stable Asset    | USDC on Stellar                       |
-| Frontend        | Next.js 14 + React 18                 |
-| Wallet          | Freighter                             |
-| AI Agent        | Python + LangChain + FastAPI + Claude |
-| Database        | PostgreSQL + Prisma                   |
-| Hosting         | Vercel + Railway                      |
-
----
-
-# Repository Structure
-
-```bash
-sflow/
-├── frontend/
-│   ├── dashboard/
-│   ├── payroll/
-│   ├── shareholder-hub/
-│   └── marketplace/
-│
-├── contracts/
-│   ├── payroll-vault/
-│   ├── streaming-payments/
-│   ├── shareholder-protocol/
-│   ├── bnpl-engine/
-│   ├── liquidation-engine/
-│   └── compliance-registry/
-│
-├── agent/
-│   ├── treasury-agent/
-│   ├── risk-engine/
-│   └── repayment-monitor/
-│
-└── packages/
-    ├── stellar-utils/
-    ├── sflow-sdk/
-    └── treasury-sdk/
+### Contract Layout
+```text
+contracts/
+├── vault/          # Solo savings: flexible, locked, goal. Holds USDC. No yield logic.
+├── group_pool/     # Group savings & split pools: contributions, payouts, share splits, default handling.
+├── yield_adapter/  # OPTIONAL, opt-in. Routes idle balances to an external yield source (swappable).
+├── registry/       # Factory + directory of pools/vaults. Emits events for the indexer.
+├── fee_collector/  # Transparent, on-chain protocol fees.
+└── policy/         # Reusable auth rules (limits, timelocks) shared with the smart-wallet layer.
 ```
 
 ---
 
-# Future Roadmap
-
-## Phase 1
-
-* Payroll streaming
-* Shareholder infrastructure
-* Stellar wallet integration
-* Dividend engine
-
-## Phase 2
-
-* AI Treasury Agent
-* Business treasury analytics
-* Cross-border payroll routing
-* Stablecoin settlement optimization
-
-## Phase 3
-
-* BNPL marketplace
-* Asset-backed lending
-* Merchant integrations
-* On-chain liquidation systems
-
-## Phase 4
-
-* Global payroll APIs
-* Institutional treasury tooling
-* Embedded finance SDK
-* AI autonomous business finance
+## 📁 Repository Structure
+```text
+/
+├── apps/
+│   ├── web/              # Next.js frontend
+│   └── api/              # Node.js backend API
+├── contracts/            # Soroban smart contracts (Rust)
+├── packages/             # Shared utilities and types
+├── scripts/              # Deployment and automation scripts
+├── tests/                # Integration and E2E tests
+└── README.md
+```
 
 ---
 
-# SFlow Mission
+## 🛠 Setup Instructions
 
-SFlow exists to turn financial infrastructure into a shared economy — where businesses, workers, investors, and communities all participate directly in the value they create.
+### Prerequisites
 
-Payroll is no longer just a payment.
+Before you begin, ensure you have the following installed:
 
-It becomes ownership, liquidity, yield, and programmable finance — powered by AI and settled globally on [Stellar](https://stellar.org?utm_source=chatgpt.com).
+- **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
+- **npm** or **yarn** - Comes with Node.js
+- **Rust** (stable toolchain) - [Install](https://rustup.rs/)
+- **Soroban CLI** - Instructions below
+- **Stellar testnet account** - We'll create this in setup
+
+### Installation Overview
+
+1. Clone the repository
+2. Set up smart contracts
+3. Set up backend API
+4. Set up frontend
+5. Run tests
+
+---
+
+## 📦 1. Clone the Repository
+```bash
+git clone https://github.com/your-org/stow.git
+cd stow
+```
+
+---
+
+## 🔗 2. Smart Contracts Setup (Soroban)
+
+### Install Soroban CLI
+```bash
+cargo install --locked stellar-cli --features opt
+```
+
+Or use the install script:
+```bash
+curl -fsSL https://github.com/stellar/stellar-cli/raw/main/install.sh | sh
+```
+
+Verify installation:
+```bash
+stellar --version
+```
+
+### Configure Stellar Testnet
+```bash
+stellar network add --global testnet \
+  --rpc-url https://soroban-testnet.stellar.org:443 \
+  --network-passphrase "Test SDF Network ; September 2015"
+```
+
+### Generate Identity & Fund Account
+```bash
+stellar keys generate --global alice --network testnet
+```
+
+Get your address:
+```bash
+stellar keys address alice
+```
+
+Fund your account using Friendbot:
+```bash
+curl "https://friendbot.stellar.org?addr=$(stellar keys address alice)"
+```
+
+Verify balance:
+```bash
+stellar account balance --id alice --network testnet
+```
+
+### Build Contracts
+```bash
+cd contracts
+cargo build --target wasm32-unknown-unknown --release
+```
+
+### Deploy Contracts
+```bash
+stellar contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/stow_contract.wasm \
+  --source alice \
+  --network testnet
+```
+
+Save the contract ID output - you'll need it for frontend and backend setup.
+
+### Initialize Contract (if required)
+```bash
+stellar contract invoke \
+  --id YOUR_CONTRACT_ID \
+  --source alice \
+  --network testnet \
+  -- initialize \
+  --admin $(stellar keys address alice)
+```
+
+> **Note:** The admin role's powers are limited and documented in the Trust & Security Model above. It cannot move user principal.
+
+---
+
+## 🖥 3. Backend Setup (Node.js API)
+```bash
+cd apps/api
+npm install
+```
+
+### Create Environment File
+
+Create `.env` in `apps/api/`:
+```env
+PORT=3001
+NODE_ENV=development
+
+# Stellar Network
+STELLAR_NETWORK=testnet
+SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
+HORIZON_URL=https://horizon-testnet.stellar.org
+
+# Contract
+CONTRACT_ID=YOUR_DEPLOYED_CONTRACT_ID
+
+# Anchor / on-ramp (SEP-24 hosted deposit/withdraw)
+ANCHOR_HOME_DOMAIN=your-anchor-domain
+ANCHOR_ASSET_CODE=USDC
+
+# Database (if using)
+DATABASE_URL=postgresql://user:password@localhost:5432/stow
+
+# Optional
+REDIS_URL=redis://localhost:6379
+```
+
+### Run Database Migrations (if applicable)
+```bash
+npm run migrate
+```
+
+### Start Backend Server
+```bash
+npm run dev
+```
+
+Backend should now be running at `http://localhost:3001`
+
+### Verify Backend
+```bash
+curl http://localhost:3001/health
+```
+
+---
+
+## 🌐 4. Frontend Setup (Next.js)
+```bash
+cd apps/web
+npm install
+```
+
+### Create Environment File
+
+Create `.env.local` in `apps/web/`:
+```env
+# Stellar Network
+NEXT_PUBLIC_STELLAR_NETWORK=testnet
+NEXT_PUBLIC_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
+NEXT_PUBLIC_HORIZON_URL=https://horizon-testnet.stellar.org
+
+# Contract
+NEXT_PUBLIC_CONTRACT_ID=YOUR_DEPLOYED_CONTRACT_ID
+
+# Backend API
+NEXT_PUBLIC_API_URL=http://localhost:3001
+
+# Passkey smart wallet (optional, for passwordless onboarding)
+NEXT_PUBLIC_PASSKEY_RELAYER_URL=your_relayer_url
+```
+
+### Run Development Server
+```bash
+npm run dev
+```
+
+Frontend should now be running at `http://localhost:3000`
+
+### Build for Production
+```bash
+npm run build
+npm start
+```
+
+---
+
+## 🧪 5. Running Tests
+
+### Contract Tests
+```bash
+cd contracts
+cargo test
+```
+
+### Backend Tests
+```bash
+cd apps/api
+npm test
+```
+
+Run with coverage:
+```bash
+npm run test:coverage
+```
+
+### Frontend Tests
+```bash
+cd apps/web
+npm test
+```
+
+Run E2E tests (requires running backend and deployed contracts):
+```bash
+npm run test:e2e
+```
+
+### Integration Tests
+
+From project root:
+```bash
+npm run test:integration
+```
+
+---
+
+## 🌍 Network Configuration
+
+### Testnet
+
+- **Network Passphrase:** `Test SDF Network ; September 2015`
+- **RPC URL:** `https://soroban-testnet.stellar.org:443`
+- **Horizon URL:** `https://horizon-testnet.stellar.org`
+- **Friendbot:** `https://friendbot.stellar.org`
+
+### Contract Addresses (Testnet)
+
+- **Main Savings Contract:** `CXXXXXX...` (Update after deployment)
+- **USDC Token:** `CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA`
+
+---
+
+## 💼 Business Model
+
+Stow's fees are transparent and on-chain:
+
+- **Performance fee on Tier-1 yield** - a small percentage of yield earned only, never of principal. Stow earns only when users do.
+- **Optional pool-creation / per-round fee** for group savings.
+
+No token is required to use Stow. Any future governance mechanism would be introduced only after real usage exists.
+
+---
+
+## 🐛 Troubleshooting
+
+### Contract Deployment Fails
+
+**Error:** `insufficient balance`
+
+**Solution:** Fund your account using Friendbot:
+```bash
+curl "https://friendbot.stellar.org?addr=$(stellar keys address alice)"
+```
+
+### Frontend Can't Connect to Wallet
+
+**Error:** `Failed to connect wallet`
+
+**Solution:**
+1. Ensure you have a supported wallet installed (Freighter or a passkey smart wallet)
+2. Switch wallet to Testnet network
+3. Check that `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in `.env.local`
+
+### Backend Can't Index Events
+
+**Error:** `RPC connection timeout`
+
+**Solution:**
+1. Verify RPC URL is correct in `.env`
+2. Check Stellar testnet status: https://status.stellar.org
+3. Try alternative RPC: `https://soroban-testnet.stellar.org:443`
+
+### Contract Build Fails
+
+**Error:** `wasm32-unknown-unknown target not found`
+
+**Solution:** Add wasm target:
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+### Tests Failing
+
+**Error:** `Network connection error`
+
+**Solution:** Ensure contracts are deployed and environment variables are set correctly in test config.
+
+---
+
+## 📚 Documentation & Resources
+
+- **Stellar Documentation:** [developers.stellar.org](https://developers.stellar.org/docs/build/smart-contracts)
+- **Soroban Docs:** [developers.stellar.org/docs/build/smart-contracts](https://developers.stellar.org/docs/build/smart-contracts)
+- **Anchors & On/Off-Ramps:** [developers.stellar.org/docs/learn/fundamentals/anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors)
+- **Passkey Smart Wallets:** [github.com/stellar/passkey-kit](https://github.com/stellar/passkey-kit)
+- **Soroban Examples:** [github.com/stellar/soroban-examples](https://github.com/stellar/soroban-examples)
+
+---
+
+## 🤝 Contributing
+
+See our detailed [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards (Rust/Soroban, TypeScript), Git workflow, naming conventions, and full PR process.
+
+---
+
+
+### Future
+- Additional anchors & cash on/off-ramps
+- More yield venues behind the adapter
+- Mobile app (Flutter)
+- Progressive decentralization (timelock → community input)
+- Cross-chain savings
+- Advanced analytics dashboard
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
